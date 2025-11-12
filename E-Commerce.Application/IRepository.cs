@@ -1,4 +1,5 @@
 ﻿using E_Commerce.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace E_Commerce.Application
         T Add(T entity);
 
         IQueryable<T> GetAll();
+        IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes);
+        
+
         IQueryable<T> Get(Expression<Func<T, bool>> predicate);
         Task<T> GetByIDAsync(int id);
         T GetWithTrackinByID(int id);

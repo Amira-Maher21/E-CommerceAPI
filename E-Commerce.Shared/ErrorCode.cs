@@ -15,10 +15,11 @@ namespace E_Commerce.Shared
         NotFound = 10,
         ValidationError = 11,
         Duplicated = 12,
+        BadRequest=13,
 
         // Exam-specific
         ExamNotFound = 1000,
-        NotValidExamDate = 1001,
+        InvalidData = 1001,
 
         // Instructor-specific
         NotValidInstructorBirthDate = 2000,

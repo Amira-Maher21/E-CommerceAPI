@@ -4,6 +4,7 @@ using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20251112122724_mrkllrf1")]
+    partial class mrkllrf1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace E_Commerce.Infrastructure.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Models.Order", b =>
@@ -76,12 +79,6 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -96,31 +93,7 @@ namespace E_Commerce.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("E_Commerce.Domain.Models.OrderProduct", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("OrderID");
-
-                    b.ToTable("OrderProduct");
+                    b.ToTable("LogHistories");
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Models.Product", b =>
@@ -145,6 +118,9 @@ namespace E_Commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -156,7 +132,9 @@ namespace E_Commerce.Infrastructure.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Products");
+                    b.HasIndex("OrderID");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Models.Order", b =>
@@ -170,18 +148,16 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("E_Commerce.Domain.Models.OrderProduct", b =>
+            modelBuilder.Entity("E_Commerce.Domain.Models.Product", b =>
                 {
                     b.HasOne("E_Commerce.Domain.Models.Order", null)
-                        .WithMany("OrderProducts")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Products")
+                        .HasForeignKey("OrderID");
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Models.Order", b =>
                 {
-                    b.Navigation("OrderProducts");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

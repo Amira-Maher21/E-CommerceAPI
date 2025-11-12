@@ -1,60 +1,4 @@
-﻿//using E_Commerce.Application.Repositories;
-//using E_Commerce.Domain.Exceptions;
-//using E_Commerce.Domain.Models;
-//  using MediatR;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-
-//namespace E_Commerce.Application.CQRS.CustomerManagement.Queries
-//{
-//    public record GETCustomersByIDQuery(int id):IRequest<CustomerDto>
-//    {
-//        public int ID => id; 
-//    }
-//    public class CustomerDto()
-//    {
-//        public int ID { get; set; } 
-//        public string Name { get; set; }
-
-//        public string Email { get; set; }
-
-//        public string Phone { get; set; }
-//    }
-//    public class GETCustomersByIDQueryHandler : IRequestHandler<GETCustomersByIDQuery, CustomerDto>
-//    {
-//        IRepository<Customer> _CustomerRepository;
-//        public GETCustomersByIDQueryHandler (IRepository<Customer> repository)
-//        {
-//            _CustomerRepository = repository;
-//        }
-
-//        public async Task<CustomerDto> Handle(GETCustomersByIDQuery request, CancellationToken cancellationToken)
-//        {
-//            var customer = await _CustomerRepository.GetByIDAsync(request.id);
-
-//            if (customer == null)
-//                throw new NotFoundException($"Customer with ID {request.id} not found.");
-
-//            return new CustomerDto
-//            {
-//                ID = customer.ID,
-//                Name = customer.Name,
-//                Email = customer.Email,
-//                Phone = customer.Phone
-//            };
-//        }
-
-//        Task<CustomerDto> IRequestHandler<GETCustomersByIDQuery, CustomerDto>.Handle(GETCustomersByIDQuery request, CancellationToken cancellationToken)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-
-
-//}
+﻿
 
 using E_Commerce.Application.Helpers;
 using E_Commerce.Application;
@@ -103,5 +47,41 @@ namespace E_Commerce.Application.CQRS.CustomerManagement.Queries
             return ResultViewModel<CustomerDto>.Sucess(dto, "Customer retrieved successfully.");
         }
     }
-}
+
+
+
+
+  
+         public record GETAllCustomersQuery() : IRequest<ResultViewModel<IEnumerable<CustomerDto>>>;
+
+        public class GETAllCustomersQueryHandler
+            : IRequestHandler<GETAllCustomersQuery, ResultViewModel<IEnumerable<CustomerDto>>>
+        {
+            private readonly IRepository<Customer> _customerRepository;
+
+            public GETAllCustomersQueryHandler(IRepository<Customer> customerRepository)
+            {
+                _customerRepository = customerRepository;
+            }
+
+            public async Task<ResultViewModel<IEnumerable<CustomerDto>>> Handle(GETAllCustomersQuery request, CancellationToken cancellationToken)
+            {
+                var customers = _customerRepository.GetAll(); // IQueryable<Customer>
+
+                if (customers == null)
+                {
+                    return ResultViewModel<IEnumerable<CustomerDto>>.Faliure(
+                        ErrorCode.NotFound,
+                        "No customers found."
+                    );
+                }
+
+                // تحويل للقائمة DTOs
+                var dtoList = customers.Map<CustomerDto>(); // MapperHelper مع AutoMapper
+
+                return ResultViewModel<IEnumerable<CustomerDto>>.Sucess(dtoList, "Customers retrieved successfully.");
+            }
+        }
+    }
+
 

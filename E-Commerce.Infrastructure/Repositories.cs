@@ -28,9 +28,14 @@ namespace E_Commerce.Infrastructure
             return GetAll().Where(predicate);
         }
 
+        
+
+
         public IQueryable<T> GetAll()
         {
-            return _context.Set<T>().Where(x => !x.IsDeleted).AsNoTracking();
+            return _context.Set<T>()
+                .Where(x => !x.IsDeleted)
+                .AsNoTracking();
             //return _context.Set<T>().Where(x => !x.Deleted).AsNoTrackingWithIdentityResolution();
         }
 
@@ -112,6 +117,21 @@ namespace E_Commerce.Infrastructure
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>().Where(x => !x.IsDeleted).AsNoTracking();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query;
         }
 
 
