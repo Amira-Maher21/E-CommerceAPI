@@ -32,5 +32,14 @@ namespace E_CommerceAPI.Controllers
             return await _mediator.Send(query);
         }
 
+
+        // POST /UpdateOrderStatus/{id}
+        [HttpPost("UpdateOrderStatus/{id}")]
+        public async Task<ResultViewModel<OrderDto>> UpdateOrderStatus(int id)
+        {
+            var command = new UpdateOrderStatusCommand(id);
+            return await _mediator.Send(command);
+        }
+
     }
 }
