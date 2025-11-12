@@ -17,6 +17,13 @@ namespace E_CommerceAPI.Controllers
             _mediator = mediator;
         }
 
+        // POST /orders
+        [HttpPost]
+        public async Task<ResultViewModel<OrderDto>> CreateOrder([FromBody] CreateOrderCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+
         // GET /orders/{id}
         [HttpGet("{id}")]
         public async Task<ResultViewModel<OrderDto>> GetOrderById(int id)

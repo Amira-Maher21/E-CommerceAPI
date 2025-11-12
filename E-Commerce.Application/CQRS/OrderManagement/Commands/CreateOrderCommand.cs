@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
- 
 using E_Commerce.Application.Helpers;
 using E_Commerce.Domain.Models;
 using E_Commerce.Shared;
@@ -12,16 +11,8 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Application.CQRS.OrderManagement
 {
-    #region Create Order Command
+    #region DTOs
 
-    // ✅ Command
-    public record CreateOrderCommand : IRequest<ResultViewModel<OrderDto>>
-    {
-        public int CustomerID { get; set; }
-        public List<OrderProductDto> Products { get; set; } = new();
-    }
-
-    // ✅ DTOs
     public class OrderProductDto
     {
         public int ProductID { get; set; }
@@ -36,8 +27,17 @@ namespace E_Commerce.Application.CQRS.OrderManagement
         public double TotalPrice { get; set; }
         public int NumberOfProducts { get; set; }
     }
- 
-    // ✅ Handler
+
+    #endregion
+
+    #region Create Order Command
+
+    public record CreateOrderCommand : IRequest<ResultViewModel<OrderDto>>
+    {
+        public int CustomerID { get; set; }
+        public List<OrderProductDto> Products { get; set; } = new();
+    }
+
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ResultViewModel<OrderDto>>
     {
         private readonly IRepository<Order> _orderRepository;
@@ -59,10 +59,12 @@ namespace E_Commerce.Application.CQRS.OrderManagement
 
         public async Task<ResultViewModel<OrderDto>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+            // Validate Customer
             var customer = await _customerRepository.GetByIDAsync(request.CustomerID);
             if (customer == null)
                 return ResultViewModel<OrderDto>.Faliure(ErrorCode.NotFound, $"Customer with ID {request.CustomerID} not found.");
 
+            // Validate Products
             if (request.Products == null || !request.Products.Any())
                 return ResultViewModel<OrderDto>.Faliure(ErrorCode.InvalidData, "Order must contain at least one product.");
 
@@ -113,11 +115,8 @@ namespace E_Commerce.Application.CQRS.OrderManagement
 
     #region Get Order By ID Query
 
-    // ✅ Query
     public record GetOrderByIdQuery(int OrderId) : IRequest<ResultViewModel<OrderDto>>;
 
-
-    // ✅ Handler
     public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ResultViewModel<OrderDto>>
     {
         private readonly IRepository<Order> _orderRepository;
@@ -131,7 +130,6 @@ namespace E_Commerce.Application.CQRS.OrderManagement
 
         public async Task<ResultViewModel<OrderDto>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            // ✅ Get order with Customer and OrderProducts
             var order = await _orderRepository
                 .GetAll(o => o.Customer, o => o.OrderProducts)
                 .FirstOrDefaultAsync(o => o.ID == request.OrderId, cancellationToken);
@@ -139,7 +137,6 @@ namespace E_Commerce.Application.CQRS.OrderManagement
             if (order == null)
                 return ResultViewModel<OrderDto>.Faliure(ErrorCode.NotFound, $"Order with ID {request.OrderId} not found.");
 
-            // ✅ Map to DTO using AutoMapper
             var dto = _mapper.Map<OrderDto>(order);
 
             return ResultViewModel<OrderDto>.Sucess(dto, "Order retrieved successfully.");
