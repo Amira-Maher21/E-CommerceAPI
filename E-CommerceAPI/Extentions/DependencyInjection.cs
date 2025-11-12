@@ -1,17 +1,17 @@
 ﻿using Autofac;
- 
+using E_Commerce.Application;
+using E_Commerce.Infrastructure;
+
 namespace E_CommerceAPI.Extentions
 {
     public class DependencyInjection : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             //builder.RegisterType<UnitOfWork.UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             //builder.RegisterType<StoreContext>().InstancePerLifetimeScope();
 
-            //builder.RegisterAssemblyTypes(typeof(IEmployeeService).Assembly).AsImplementedInterfaces().InstancePerLifetimeScope();
-            //builder.RegisterAssemblyTypes(typeof(IDepartmentService).Assembly).AsImplementedInterfaces().InstancePerLifetimeScope();
             //builder.RegisterAssemblyTypes(typeof(ILogHistoryService).Assembly).AsImplementedInterfaces().InstancePerLifetimeScope();
 
             //// MediatR

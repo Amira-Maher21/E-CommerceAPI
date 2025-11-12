@@ -1,5 +1,4 @@
-﻿using E_Commerce.Domain.Exceptions;
-using E_CommerceAPI.ViewModels;
+﻿using E_Commerce.Shared;
 using System.Net;
 using System.Text.Json;
 

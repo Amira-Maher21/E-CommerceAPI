@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Domain.Exceptions
+namespace E_Commerce.Shared
 {
     public class BusinessException : Exception
     {

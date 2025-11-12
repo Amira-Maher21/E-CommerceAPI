@@ -57,10 +57,9 @@
 //}
 
 using E_Commerce.Application.Helpers;
-using E_Commerce.Application.Repositories;
-using E_Commerce.Domain.Exceptions;
+using E_Commerce.Application;
 using E_Commerce.Domain.Models;
-using E_CommerceAPI.ViewModels;  
+using E_Commerce.Shared;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

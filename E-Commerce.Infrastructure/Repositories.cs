@@ -1,14 +1,9 @@
-﻿using E_Commerce.Application.Repositories;
+﻿using E_Commerce.Application;
 using E_Commerce.Domain.Models;
 using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce.Infrastructure
 {
@@ -119,9 +114,7 @@ namespace E_Commerce.Infrastructure
             _context.SaveChanges();
         }
 
-        public IDisposable BeginTransaction()
-        {
-            throw new NotImplementedException();
-        }
+
     }
+
 }
